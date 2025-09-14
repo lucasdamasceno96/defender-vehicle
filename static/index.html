@@ -4,14 +4,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Defender Vehicle Prototype</title>
+    <title>Defender Vehicle - Mission Control</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #1a1a1a;
+            color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .chart-container {
+            flex: 3;
+            min-width: 600px;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 300px;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #4CAF50;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .mission-brief p,
+        .action-panel p,
+        .mitigation-panel p {
+            margin: 5px 0;
+        }
+
+        #playerScore {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #mitigation-panel {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #mitigation-panel ul {
+            padding-left: 20px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Defender Vehicle Mission Control</h1>
-    <p>System is operational. Awaiting dashboard components.</p>
-    <p><a href="/api/health">Check API Health</a></p>
-    <p><a href="/api/telemetry?limit=5">Check Telemetry API</a></p>
+    <div class="container">
+        <div class="chart-container">
+            <h2>Vehicle Telemetry Feed</h2>
+            <canvas id="gpsChart"></canvas>
+            <canvas id="speedChart" style="margin-top: 20px;"></canvas>
+        </div>
+        <div class="sidebar">
+            <div class="mission-brief">
+                <h2>Mission Briefing</h2>
+                <p><strong>Objective:</strong> Identify anomalous data points in the vehicle's telemetry stream.</p>
+                <p><strong>Instructions:</strong> Click on a suspicious point in the GPS Path chart to flag it.</p>
+                <p><strong>Score:</strong> <span id="playerScore">0</span></p>
+            </div>
+            <div class="action-panel">
+                <h2>Action Log</h2>
+                <p id="actionStatus">Awaiting your analysis...</p>
+            </div>
+            <div class="mitigation-panel" id="mitigationPanel">
+                <h3>Mitigation Playbook</h3>
+                <p><strong>Threat:</strong> <span id="threatType"></span></p>
+                <ul id="mitigationList"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="/static/app.js"></script>
 </body>
 
 </html>
