@@ -84,3 +84,8 @@ func (h *TelemetryHandler) ExportLogs(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Failed to generate CSV: "+err.Error())
 	}
 }
+
+func (h *TelemetryHandler) GetGameState(c *gin.Context) {
+	state := h.service.GetGameState()
+	c.JSON(http.StatusOK, state)
+}

@@ -149,3 +149,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Start the application ---
     initializeDashboard();
 });
+
+// ... (elementos do DOM existentes)
+const badgeContainer = document.getElementById('badge-container');
+const noBadgesMsg = document.getElementById('no-badges');
+
+// Função para atualizar o placar e badges
+const updateGameState = async () => {
+    try {
+        const response = await fetch('/api/gamestate');
+        const state = await response.json();
+
+        scoreElement.textContent = state.player_score;
+
+        badgeContainer.innerHTML = ''; // Limpa badges antigos
+        if (state.player_badges && state.player_badges.length > 0) {
+            state.player_badges.forEach(badgeText => {
+                const badge = document.createElement('span');
+                badge.textContent = badgeText;
+                badge.style.background = '#4CAF50';
+                badge.style.color = 'white';
+                badge.style.padding = '2px 8px';
+                badge.style.borderRadius = '12px';
+                badge.style.fontSize = '0.8em';
+                badgeContainer.appendChild(badge);
+            });
+        } else {
+            badgeContainer.innerHTML = '<p id="no-badges">None yet.</p>';
+        }
+
+    } catch (error) {
+        console.error('Failed to update game state:', error);
+    }
+}
+
+// Em handleChartClick, substitua a atualização manual do placar
+// por uma chamada à nova função
+// Remova a linha: let currentScore = parseInt(scoreElement.textContent);
+// Remova a linha: scoreElement.textContent = result.result ? currentScore + 10 : currentScore - 5;
+// E no final do bloco try, adicione:
+await updateGameState();
+
+// E chame no início para carregar o estado inicial
+// Dentro de initializeDashboard(), no final do bloco try:
+await updateGameState();

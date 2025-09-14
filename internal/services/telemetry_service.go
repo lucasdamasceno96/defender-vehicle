@@ -21,12 +21,15 @@ type TelemetryService interface {
 	ProcessDetection(req models.DetectionRequest) (bool, error)
 	TriggerMitigation(telemetryID int) (models.MitigationResponse, error)
 	ExportLogsToCSV(writer io.Writer) error
+	GetGameState() models.GameState
 }
 
 type telemetryServiceImpl struct {
 	telemetryData []models.Telemetry
 	detectionLogs []models.DetectionLog
 	playerScore   int
+	playerBadges  map[string]bool // Usamos um map para evitar badges duplicados
+	correctHits   int
 }
 
 // NewTelemetryService creates a new instance of the telemetry service and generates data.
@@ -34,6 +37,8 @@ func NewTelemetryService() TelemetryService {
 	service := &telemetryServiceImpl{
 		detectionLogs: make([]models.DetectionLog, 0),
 		playerScore:   0,
+		playerBadges:  make(map[string]bool),
+		correctHits:   0,
 	}
 	service.generateTelemetry(100)
 	return service
@@ -148,6 +153,8 @@ func (s *telemetryServiceImpl) ProcessDetection(req models.DetectionRequest) (bo
 
 	if isCorrect {
 		s.playerScore += 10
+		s.correctHits++
+		s.checkAndAwardBadges() // <<< Lógica de Badges
 	} else {
 		s.playerScore -= 5
 	}
@@ -211,4 +218,30 @@ func (s *telemetryServiceImpl) ExportLogsToCSV(writer io.Writer) error {
 	}
 
 	return nil
+}
+
+// NOVO MÉTODO: checkAndAwardBadges
+func (s *telemetryServiceImpl) checkAndAwardBadges() {
+	if s.correctHits == 1 {
+		s.playerBadges["First Catch"] = true
+	}
+	if s.correctHits == 3 {
+		s.playerBadges["Threat Hunter"] = true
+	}
+	// A anomalia do tipo 'sensor_dropout' é a última e mais difícil
+	if len(s.detectionLogs) > 0 && s.detectionLogs[len(s.detectionLogs)-1].TelemetryID == 75 {
+		s.playerBadges["Critical Failure Averted"] = true
+	}
+}
+
+// NOVO MÉTODO: GetGameState
+func (s *telemetryServiceImpl) GetGameState() models.GameState {
+	badges := make([]string, 0, len(s.playerBadges))
+	for badge := range s.playerBadges {
+		badges = append(badges, badge)
+	}
+	return models.GameState{
+		PlayerScore:  s.playerScore,
+		PlayerBadges: badges,
+	}
 }

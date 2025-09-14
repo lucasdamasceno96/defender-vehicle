@@ -23,3 +23,9 @@ type MitigationResponse struct {
 	SuggestedActions []string `json:"suggested_actions"`
 	Status           string   `json:"status"`
 }
+
+// GameState represents the player's current progress.
+type GameState struct {
+	PlayerScore  int      `json:"player_score"`
+	PlayerBadges []string `json:"player_badges"`
+}
