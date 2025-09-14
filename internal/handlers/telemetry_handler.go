@@ -74,3 +74,13 @@ func (h *TelemetryHandler) TriggerMitigation(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *TelemetryHandler) ExportLogs(c *gin.Context) {
+	c.Header("Content-Disposition", "attachment; filename=detection_logs.csv")
+	c.Header("Content-Type", "text/csv")
+
+	// Pass the response writer directly to the service
+	if err := h.service.ExportLogsToCSV(c.Writer); err != nil {
+		c.String(http.StatusInternalServerError, "Failed to generate CSV: "+err.Error())
+	}
+}

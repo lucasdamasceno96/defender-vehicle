@@ -39,6 +39,7 @@ func main() {
 
 		api.POST("/detect", telemetryHandler.DetectAnomaly)
 		api.POST("/mitigate/:id", telemetryHandler.TriggerMitigation)
+		api.GET("/logs", telemetryHandler.ExportLogs)
 	}
 
 	router.Run(":8080")
