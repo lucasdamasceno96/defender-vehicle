@@ -36,6 +36,9 @@ func main() {
 
 		// 4. Register routes with handlers
 		api.GET("/telemetry", telemetryHandler.GetTelemetry)
+
+		api.POST("/detect", telemetryHandler.DetectAnomaly)
+		api.POST("/mitigate/:id", telemetryHandler.TriggerMitigation)
 	}
 
 	router.Run(":8080")
