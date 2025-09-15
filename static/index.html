@@ -60,15 +60,24 @@
             color: #fff;
         }
 
-        #mitigation-panel {
+        #mitigationPanel {
+            /* Renomeado para corresponder ao JS */
             background: #333;
             padding: 10px;
             border-radius: 5px;
             display: none;
         }
 
-        #mitigation-panel ul {
+        #mitigationPanel ul {
             padding-left: 20px;
+        }
+
+        .badge {
+            background: #4CAF50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
         }
     </style>
 </head>
@@ -88,7 +97,7 @@
                 <p><strong>Score:</strong> <span id="playerScore">0</span></p>
                 <h3>Badges Earned</h3>
                 <div id="badge-container" style="display: flex; gap: 5px; flex-wrap: wrap;">
-                    <p id="no-badges">None yet.</p>
+                    <p id="no-badges">Nenhum ainda.</p>
                 </div>
             </div>
             <div class="action-panel">
@@ -102,6 +111,7 @@
             </div>
         </div>
     </div>
+
     <script src="/static/app.js"></script>
 </body>
 
